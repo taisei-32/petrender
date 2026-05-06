@@ -2,6 +2,7 @@ FROM ubuntu:26.04
 
 ENV DEBIAN_FRONTEND=noninteractive 
 RUN apt update && apt install -y \
+    python3-pip \
     autopoint \
     gettext \
     autoconf \
@@ -21,7 +22,19 @@ RUN apt update && apt install -y \
     cmake \
     build-essential \
     golang-go \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    libosmesa6 \
+    libgl1 libglx-mesa0 \
+RUN pip install --break-system-packages \
+    pyrender \
+    trimesh \
+    Pillow \
+    numpy \
+    --upgrade pyopengl
+RUN pip3 install --break-system-packages \
+    --upgrade \
+    pyopengl \
+    pyopengl-accelerate
 WORKDIR /opt 
 RUN git clone https://github.com/mchehab/zbar.git 
 WORKDIR /opt/zbar 
@@ -30,10 +43,13 @@ RUN ./configure --with-gtk=no --with-python=no && \
     make -j$(nproc) && \
     make install && \
     ldconfig 
+WORKDIR /opt
+RUN git clone https://github.com/zint/zint.git
 WORKDIR /opt 
 RUN git clone https://github.com/zxing-cpp/zxing-cpp.git
 WORKDIR /opt/zxing-cpp 
 RUN cmake -S . -B build \
  -DCMAKE_BUILD_TYPE=Release && \
  cmake --build build -j$(nproc) 
+WORKDIR /work
 CMD ["/bin/bash"]
