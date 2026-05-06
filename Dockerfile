@@ -22,9 +22,10 @@ RUN apt update && apt install -y \
     cmake \
     build-essential \
     golang-go \
-    && rm -rf /var/lib/apt/lists/* \
     libosmesa6 \
-    libgl1 libglx-mesa0 \
+    libgl1 \
+    libglx-mesa0 \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install --break-system-packages \
     pyrender \
     trimesh \
@@ -52,4 +53,5 @@ RUN cmake -S . -B build \
  -DCMAKE_BUILD_TYPE=Release && \
  cmake --build build -j$(nproc) 
 WORKDIR /work
+RUN go build parse_log.go
 CMD ["/bin/bash"]
