@@ -38,6 +38,7 @@ RUN pip3 install --break-system-packages \
     pyopengl-accelerate
 WORKDIR /opt 
 RUN git clone https://github.com/mchehab/zbar.git 
+COPY ean.c /opt/zbar/zbar/decoder/ean.c
 WORKDIR /opt/zbar 
 RUN autoreconf -vfi 
 RUN ./configure --with-gtk=no --with-python=no && \
@@ -53,5 +54,4 @@ RUN cmake -S . -B build \
  -DCMAKE_BUILD_TYPE=Release && \
  cmake --build build -j$(nproc) 
 WORKDIR /work
-RUN go build parse_log.go
 CMD ["/bin/bash"]
