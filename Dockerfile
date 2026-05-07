@@ -29,13 +29,13 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --break-system-packages \
-    pyrender==0.1.18 \
     trimesh \
     Pillow \
     numpy \
     pyopengl \
-    pyopengl-accelerate \
-    networkx
+    pyopengl-accelerate && \
+    pip3 install --break-system-packages pyrender==0.1.18 && \
+    pip3 install --break-system-packages --upgrade networkx
 
 WORKDIR /opt 
 RUN git clone https://github.com/mchehab/zbar.git 
