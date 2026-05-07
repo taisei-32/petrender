@@ -25,17 +25,18 @@ RUN apt update && apt install -y \
     libosmesa6 \
     libgl1 \
     libglx-mesa0 \
+    libglu1-mesa-dev \
     && rm -rf /var/lib/apt/lists/*
-RUN pip install --break-system-packages \
-    pyrender \
+
+RUN pip3 install --break-system-packages \
+    pyrender==0.1.18 \
     trimesh \
     Pillow \
     numpy \
-    --upgrade pyopengl
-RUN pip3 install --break-system-packages \
-    --upgrade \
     pyopengl \
-    pyopengl-accelerate
+    pyopengl-accelerate \
+    networkx
+
 WORKDIR /opt 
 RUN git clone https://github.com/mchehab/zbar.git 
 WORKDIR /opt/zbar 
@@ -44,13 +45,16 @@ RUN ./configure --with-gtk=no --with-python=no && \
     make -j$(nproc) && \
     make install && \
     ldconfig 
+
 WORKDIR /opt
 RUN git clone https://github.com/zint/zint.git
+
 WORKDIR /opt 
 RUN git clone https://github.com/zxing-cpp/zxing-cpp.git
 WORKDIR /opt/zxing-cpp 
 RUN cmake -S . -B build \
  -DCMAKE_BUILD_TYPE=Release && \
  cmake --build build -j$(nproc) 
+
 WORKDIR /work
 CMD ["/bin/bash"]
