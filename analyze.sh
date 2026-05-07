@@ -29,12 +29,14 @@ for img in "$RENDER_DIR"/*.png; do
     if [ "$result_number" = "$DATA" ]; then
         ((count_zbar++))
     fi
+    echo "$filename"
 done
 
 if [ ! -f "./parse_log" ]; then
     go build -o parse_log parse_log.go 
 fi
 
+echo "analyze zbar log"
 echo "$count_zbar" >> "$LOG_RAW_ZBAR"
 ./parse_log "$LOG_RAW_ZBAR" "$LOG_REG_ZBAR"
 echo "Done zbar"
@@ -48,8 +50,10 @@ for img in "$RENDER_DIR"/*.png; do
     if [ "$result_number" = "$DATA" ]; then
         ((count_zxing++))
     fi
+    echo "$filename"
 done
 
+echo "analyze zxing log"
 echo "$count_zxing" >> "$LOG_RAW_ZXING"
 ./parse_log "$LOG_RAW_ZXING" "$LOG_REG_ZXING"
 echo "Done zxing"

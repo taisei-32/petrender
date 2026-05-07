@@ -217,7 +217,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-analyzer
+analyze
 gen_imgs
 render_imgs
 parse_log

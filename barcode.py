@@ -126,8 +126,8 @@ def render_scene(barcode_angle_deg, camera_offset_deg, barcode_img,
 
 def render(img_path, data, camera_fov):
     OUTPUT_DIR  = f"render_imgs/{data}"
-    ANGLE_START = 120                  
-    ANGLE_END   = 120                
+    ANGLE_START = 10                 
+    ANGLE_END   = 80                
     ANGLE_STEP  = 1   
 
     OFFSET_START = -30
@@ -159,10 +159,12 @@ def render(img_path, data, camera_fov):
 
 def main():
     # 12桁
-    data = "490270503622" 
-    img_path, data = gen_barcode(data)
-    render(img_path, data, 43)
-    subprocess.run(["bash", "analyze.sh", data], check=True)
+    for data in range(490270503600, 490270503630):
+        # data = "490270503622" 
+        data = str(data)
+        img_path, data = gen_barcode(data)
+        render(img_path, data, 43)
+        subprocess.run(["bash", "analyze.sh", data], check=True)
 
 if __name__ == "__main__":
     main()
