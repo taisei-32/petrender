@@ -31,6 +31,10 @@ for img in "$RENDER_DIR"/*.png; do
     fi
 done
 
+if [ ! -f "./parse_log" ]; then
+    go build -o parse_log parse_log.go 
+fi
+
 echo "$count_zbar" >> "$LOG_RAW_ZBAR"
 ./parse_log "$LOG_RAW_ZBAR" "$LOG_REG_ZBAR"
 echo "Done zbar"
