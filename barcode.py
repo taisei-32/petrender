@@ -158,14 +158,21 @@ def render(img_path, data, camera_fov):
             print(f"{out_path}")
 
 def main():
-    # 12桁
-    for data in range(490270503600, 490270503630):
+    raw_data = 490270503670
+    offset = 10
+    # windows
+    # subprocess.run(["sed", "-i", r"s/\r//", "analyze1.sh"])
+    for data in range(raw_data, raw_data+offset):
         # data = "490270503622" 
         data = str(data)
         img_path, data = gen_barcode(data)
         render(img_path, data, 43)
-        subprocess.run(["bash", "analyze.sh", data], check=True)
-
+    for data in range(raw_data, raw_data+offset):
+        # data = "490270503622" 
+        data = str(data)
+        check_digit = calc_check_digit(data)
+        data = data + str(check_digit)  
+        subprocess.run(["bash", "analyze1.sh", data.strip()], check=True)
 if __name__ == "__main__":
     main()
 

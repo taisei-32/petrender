@@ -22,8 +22,12 @@ func main() {
 	outputPath := os.Args[2]
 
 	in, err := os.Open(inputPath)
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
 
-	re := regexp.MustCompile(`Processed:\s+(\S+)\s+->\s+([0-9]+)`)
+	re := regexp.MustCompile(`Processed:\s+(\S+)\s+->\s+(\S*)`)
 
 	var results []Result
 
@@ -31,12 +35,10 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-
 		m := re.FindStringSubmatch(line)
 		if len(m) != 3 {
 			continue
 		}
-
 		results = append(results, Result{
 			Name: m[1],
 			Code: m[2],
@@ -48,7 +50,7 @@ func main() {
 	}
 
 	sort.Slice(results, func(i, j int) bool {
-		return results[i].Code < results[j].Code
+		return results[i].Name < results[j].Name
 	})
 
 	out, err := os.Create(outputPath)
