@@ -158,10 +158,11 @@ def render(img_path, data, camera_fov):
             print(f"{out_path}")
 
 def main():
-    raw_data = 490270503670
-    offset = 10
-    # windows
-    # subprocess.run(["sed", "-i", r"s/\r//", "analyze1.sh"])
+    raw_data = 490270503600
+    offset = 105
+    # raw_data = [490270512345,490270554321,490270551342,490270567890,490270509876,490270506987]
+    # 12桁
+    subprocess.run(["sed", "-i", r"s/\r//", "analyze1.sh"])
     for data in range(raw_data, raw_data+offset):
         # data = "490270503622" 
         data = str(data)
@@ -172,7 +173,13 @@ def main():
         data = str(data)
         check_digit = calc_check_digit(data)
         data = data + str(check_digit)  
-        subprocess.run(["bash", "analyze1.sh", data.strip()], check=True)
+        subprocess.run(["bash", "analyze1sh", data.strip()], check=True)
+    for data in range(raw_data, raw_data+offset):
+        # data = "490270503622" 
+        data = str(data)
+        check_digit = calc_check_digit(data)
+        data = data + str(check_digit)  
+        subprocess.run(["bash", "analyze.sh", data.strip()], check=True)
+    subprocess.run(["bash", "./summary_log","analyze/result_log/reg/zbar","analyze/result_log/zbar.txt"], check=True)
 if __name__ == "__main__":
     main()
-

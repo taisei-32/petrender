@@ -8,8 +8,13 @@ ZBARIMG_DIR="/opt/zbar/zbarimg/zbarimg"
 ZXING_DIR="/opt/zxing-cpp/build/example/ZXingReader"
 LOG_RAW_ZBAR="analyze/result_log/raw/zbar/${DATA}_zbar_log.txt"
 LOG_RAW_ZXING="analyze/result_log/raw/zxing/${DATA}_zxing_log.txt"
-LOG_REG_ZBAR="analyze/result_log/reg/zbar/${DATA}_zbar_log.txt"
-LOG_REG_ZXING="analyze/result_log/reg/zxing/${DATA}_zxing_log.txt"
+LOG_REG="analyze/result_log/reg"
+LOG_REG_ZBAR="${LOG_REG}/${DATA}_zbar_log.txt"
+LOG_REG_ZXING="${LOG_REG}/zxing/${DATA}_zxing_log.txt"
+LOG_FILTER_ZBAR="analyze/result_log/filter/zbar/${DATA}_zbar_log.txt"
+LOG_FILTER_ZXING="analyze/result_log/filter/zxing/${DATA}_zxing_log.txt"
+LOG_CLASSIFY_ZBAR="analyze/result_log/classify/zbar/${DATA}_zbar_log.txt"
+LOG_CLASSIFY_ZXING="analyze/result_log/classify/zxing/${DATA}_zxing_log.txt"
 
 mkdir -p "$ANALYZE_ZBAR_DIR"
 mkdir -p "$ANALYZE_ZXING_DIR"
@@ -17,6 +22,10 @@ mkdir -p "analyze/result_log/raw/zbar"
 mkdir -p "analyze/result_log/raw/zxing"
 mkdir -p "analyze/result_log/reg/zbar"
 mkdir -p "analyze/result_log/reg/zxing"
+mkdir -p "analyze/result_log/filter/zbar"
+mkdir -p "analyze/result_log/filter/zxing"
+mkdir -p "analyze/result_log/classify/zbar"
+mkdir -p "analyze/result_log/classify/zxing"
 
 process_zbar() {
     local img="$1"
@@ -37,9 +46,23 @@ if [ ! -f "./parse_log" ]; then
     go build -o parse_log parse_log.go 
 fi
 
+if [ ! -f "./filter_log" ]; then
+    go build -o filter_log filter_log.go
+fi
+
+if [ ! -f "./classify_log" ]; then
+    go build -o classify_log classify_log.go
+fi
+
+if [ ! -f ".summary_log" ]; then
+    go build -o summary_log summary_log.go
+fi
+
 echo "analyze zbar log"
 echo "" >> "$LOG_RAW_ZBAR"
 ./parse_log "$LOG_RAW_ZBAR" "$LOG_REG_ZBAR"
+./filter_log "$LOG_REG_ZBAR" "$LOG_FILTER_ZBAR" "$DATA"
+./classify_log "$LOG_FILTER_ZBAR" "$LOG_CLASSIFY_ZBAR" "$DATA"
 echo "Done zbar"
 
 process_zxing() {
@@ -60,4 +83,6 @@ ls "$RENDER_DIR"/*.png | xargs -P 4 -I {} bash -c 'process_zxing "$@"' _ {}
 echo "analyze zxing log"
 echo "" >> "$LOG_RAW_ZXING"
 ./parse_log "$LOG_RAW_ZXING" "$LOG_REG_ZXING"
+./filter_log "$LOG_REG_ZXING" "$LOG_FILTER_ZXING" "$DATA"
+./classify_log "$LOG_FILTER_ZXING" "$LOG_CLASSIFY_ZXING" "$DATA"
 echo "Done zxing"
