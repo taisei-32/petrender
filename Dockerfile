@@ -40,6 +40,7 @@ RUN pip3 install --break-system-packages \
 WORKDIR /opt 
 RUN git clone https://github.com/mchehab/zbar.git 
 COPY ean.c /opt/zbar/zbar/decoder/ean.c
+COPY img_scanner.c /opt/zbar/zbar/img_scanner.c
 WORKDIR /opt/zbar 
 RUN autoreconf -vfi 
 RUN ./configure --with-gtk=no --with-python=no && \
