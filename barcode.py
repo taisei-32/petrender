@@ -173,12 +173,6 @@ def main():
         data = str(data)
         check_digit = calc_check_digit(data)
         data = data + str(check_digit)  
-        subprocess.run(["bash", "analyze1sh", data.strip()], check=True)
-    for data in range(raw_data, raw_data+offset):
-        # data = "490270503622" 
-        data = str(data)
-        check_digit = calc_check_digit(data)
-        data = data + str(check_digit)  
         subprocess.run(["bash", "analyze.sh", data.strip()], check=True)
     subprocess.run(["bash", "./summary_log","analyze/result_log/reg/zbar","analyze/result_log/zbar.txt"], check=True)
 if __name__ == "__main__":
