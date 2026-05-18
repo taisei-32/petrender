@@ -37,6 +37,9 @@ func classifyChange(correct, misread string) string {
 }
 
 func visualize(correct, misread string) string {
+	if len(correct) != len(misread) {
+		return misread + " (不一致)"
+	}
 	vis := make([]byte, len(correct))
 	change := ""
 	for i := 0; i < len(correct); i++ {

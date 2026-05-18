@@ -158,22 +158,22 @@ def render(img_path, data, camera_fov):
             print(f"{out_path}")
 
 def main():
-    raw_data = 490270503600
-    offset = 105
-    # raw_data = [490270512345,490270554321,490270551342,490270567890,490270509876,490270506987]
+    raw_data = 495912740082
+    offset = 23
     # 12桁
-    subprocess.run(["sed", "-i", r"s/\r//", "analyze1.sh"])
+    subprocess.run(["sed", "-i", r"s/\r//", "analyze.sh"])
     for data in range(raw_data, raw_data+offset):
-        # data = "490270503622" 
         data = str(data)
         img_path, data = gen_barcode(data)
         render(img_path, data, 43)
     for data in range(raw_data, raw_data+offset):
-        # data = "490270503622" 
         data = str(data)
         check_digit = calc_check_digit(data)
         data = data + str(check_digit)  
         subprocess.run(["bash", "analyze.sh", data.strip()], check=True)
-    subprocess.run(["bash", "./summary_log","analyze/result_log/reg/zbar","analyze/result_log/zbar.txt"], check=True)
+    subprocess.run(["./classify_log","analyze/result_log/filter/zbar","analyze/result_log/classify/zbar.txt"], check=True) 
+    subprocess.run(["./classify_log","analyze/result_log/filter/zxing","analyze/result_log/classify/zxing.txt"], check=True) 
+    subprocess.run(["./summary_log","analyze/result_log/reg/zbar","analyze/result_log/zbar.txt"], check=True)
+    subprocess.run(["./summary_log","analyze/result_log/reg/zxing","analyze/result_log/zxing.txt"], check=True)
 if __name__ == "__main__":
     main()
